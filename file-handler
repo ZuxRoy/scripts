@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+filename="$1"
+filetype=$(file -b "$filename" | awk '{ print $1 }')
+
+case "$filetype" in
+    "PNG" | "JPG" | "JPEG" | "GIF" | "SVG" | "ICO" | "WEBP")
+        feh "$filename"
+        ;;
+    "MP4" | "WEBM")
+        mpv "$filename"
+        ;;
+    "PDF")
+        zathura "$filename" 
+        ;;
+    "Microsoft")
+        wps "$filename"
+        ;;
+    # add for "CIRC" files in logisim which show up as xml
+    *)
+        if file -b "$filename" | grep -q "script"; then
+            choice=$(printf "Yes\nNo" | dmenu -i -sb purple -p "Run this script ? " -nb black)
+            if [ $? -eq 1 ]; then
+                exit 0
+            fi
+            if [ "$choice" == "Yes" ]; then
+                "$filename"
+            else
+                kitty -e vim $filename
+            fi
+        elif file -b "$filename" | grep -q "text"; then
+            kitty -e vim "$filename"
+        else
+            kitty -e "$filename"
+        fi
+esac

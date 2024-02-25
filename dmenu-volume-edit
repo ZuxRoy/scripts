@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+
+options=("Increase Volume" "Decrease Volume" "Mute/Unmute")
+
+while true; do
+    volume=$(pactl list sinks | grep 'Volume: ' | head -n 1 | awk '{print $5}')
+    device=$(pactl list sinks | grep 'Active Port:' | awk '{print $3}' | awk -F- '{print $3}')
+
+    if pactl list sinks | grep -q "Mute: yes"; then
+        options[2]="Unmute"
+    else
+        options[2]="Mute"
+    fi
+
+    selected_option=$(printf '%s\n' "${options[@]}" | dmenu -i -nb black -sb purple -p "Volume [$device] : $volume ")
+
+    if [ -z "$selected_option" ]; then
+        exit 0
+    fi
+
+    case $selected_option in
+        "Increase Volume")
+            options[0]="Increase Volume"
+            options[1]="Decrease Volume"
+            if [ "${volume%"%"}" -lt 100 ]; then
+                pactl set-sink-volume @DEFAULT_SINK@ +5%
+            fi
+            ;;
+        "Decrease Volume")
+            options[0]="Decrease Volume"
+            options[1]="Increase Volume"
+            if [ "${volume%"%"}" -gt 0 ]; then
+                pactl set-sink-volume @DEFAULT_SINK@ -5%
+            fi
+            ;;
+        "Mute" | "Unmute")
+            pactl set-sink-mute @DEFAULT_SINK@ toggle
+            exit 0
+            ;;
+    esac
+done
+

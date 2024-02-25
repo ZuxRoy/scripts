@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+battery=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep "percentage:" | awk '{ print $2 }' | tr -d '%')
+lower_limit=20
+upper_limit=97
+
+if [ "$battery" -lt "$lower_limit" ]; then
+    notify-send --urgency=critical "Battery below 20%"
+elif [ "$battery" -gt "$upper_limit" ]; then
+    notify-send --urgency=low "Charged up almost 100%"
+fi

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+choice=$(printf "Shutdown\nReboot" | dmenu -i -p "Power Menu " -nb black -sb purple | awk '{print tolower($0)}')
+
+if [ -n "$choice" ]; then
+    option=$(printf "Yes\nNo" | dmenu -i -p "$choice ? " -nb black -sb purple)
+    if [ "$option" == "Yes" ]; then
+        $choice
+    fi
+fi
