@@ -17,7 +17,7 @@ options=(
 
 options_urls=(
     "https://www.amazon.in/"
-    "https://music.amazon.in/"
+    "https://music.amazon.in/my/library"
     "https://www.primevideo.com/"
     "https://chat.openai.com/"
     "https://classroom.google.com/u/1/h"
