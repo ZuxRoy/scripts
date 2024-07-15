@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+history_file="$HOME/.vim-history"
+mapfile -t file_history < <(tac "$history_file")
+
+selected_file=$(printf "%s\n" "${file_history[@]}" | dmenu -i -nb black -sb purple -l 15 -p "Edit File ")
+
+if [ -z "$selected_file" ]; then
+    exit 0
+fi
+
+if [ -f "$selected_file" ]; then
+    kitty -e vim "$selected_file"
+else
+    printf "File not found" | dmenu -i -nb black -sb purple -p "Error "
+fi

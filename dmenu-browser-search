@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+
+options=(
+    "amazon"
+    "amazon prime music"
+    "amazon prime videos"
+    "chat gpt"
+    "classsroom"
+    "codeforces"
+    "discord"
+    "github"
+    "gmail"
+    "linkedin"
+    "whatsapp"
+    "youtube"
+)
+
+options_urls=(
+    "https://www.amazon.in/"
+    "https://music.amazon.in/my/library"
+    "https://www.primevideo.com/"
+    "https://chat.openai.com/"
+    "https://classroom.google.com/u/1/h"
+    "https://codeforces.com/"
+    "https://discord.com/channels/@me"
+    "https://github.com/"
+    "https://mail.google.com/"
+    "https://www.linkedin.com/feed/"
+    "https://web.whatsapp.com/"
+    "https://www.youtube.com/"
+)
+
+url=$(printf "%s\n" "${options[@]}" | dmenu -i -sb purple -p "Search Term " -l 15 -nb black)
+
+if [ -n "$url" ]; then
+    #OPTIONAL : i3 config to open window in workspace 2
+    i3-msg "workspace 2"
+
+    index=0
+    flag=0
+    for search in "${options[@]}"; do
+        if [ "$search" = "$url" ]; then
+            url="${options_urls[index]}"
+            flag=1
+            break
+        fi
+        ((index++))
+    done
+
+    if [ "$flag" == 0 ]; then
+        url="https://www.google.com/search?q=$(echo "$url" | sed 's/ /+/g')"
+        google-chrome -incognito "$url"
+    else
+        google-chrome "$url"
+    fi
+fi

@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+input=$(find ~/Code/ -type f -o -type d | fzf)
+
+if [ $? -eq 130 ]; then
+    exit 0
+fi
+
+if [ -d "$input" ]; then
+    output="$input"
+else
+    output=$(dirname "$input")
+fi
+
+echo "Starting new tmux session at $output"
+
+file=$(basename "$input")
+
+tmux new-session -c "$output" -d 
+tmux send-keys -t 0 "vim $file" ENTER
+tmux split-pane -h -t 0
+tmux attach-session -t 0

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+target="$HOME"
+while true ; do
+    files=()
+    while IFS= read -r file; do
+        files+=("$file")
+    done < <(ls -a "$target")
+    selection=$(printf "%s\n" "${files[@]}" | dmenu -i -sb purple -nb black -p "File Manager " -l 10)
+
+    if [ $? -eq 1 ]; then
+        exit 0
+    fi
+    if [ "$selection" == ".." ]; then
+        target=$(dirname "$target")
+    elif [ "$selection" != "." ]; then
+        target="$target/$selection"
+    else
+        kitty -e tmux new-session -c "$target" -d 
+        kitty -e tmux attach-session -t 0
+        exit 0
+    fi
+    if [ ! -d "$target" ]; then
+        ~/scripts/file-handler "$target"
+        exit 0
+    fi
+done

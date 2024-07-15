@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+filename=$(scrot -e 'mv $f ~/Pictures & echo $f')
+nautilus --no-desktop --select "$HOME/Pictures/$filename"
+icon_path="~/Pictures/$filename"
+notify-send --urgency=low "Screenshot Saved !" "$icon_path"

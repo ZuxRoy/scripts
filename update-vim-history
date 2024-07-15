@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+history_file="$HOME/.vim-history"
+opened_file=$(realpath "$1")
+
+if [ ! -f "$history_file" ]; then
+    touch "$history_file"
+fi
+
+if [ -f "$opened_file" ]; then
+    if grep -Fxq "$opened_file" "$history_file"; then
+        sed -i "\|^$opened_file\$|d" "$history_file"
+    fi
+    echo "$opened_file" >> "$history_file"
+
+    count=$(wc -l < "$history_file")
+    if [ "$count" -gt 20 ]; then
+        sed -i '1d' "$history_file"
+    fi
+fi
