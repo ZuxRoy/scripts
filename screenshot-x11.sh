@@ -20,11 +20,15 @@ fi
 notify-send "Screenshot saved" -r 9991 -t 5000 -i "$filename"
 feh -F "$filename"
 
-choice=$(echo -e "(Y) Yes\n(N) No\n(R) Retake screenshot" | rofi -dmenu -i -p "Copy screenshot ? " -l 3)
+choice=$(echo -e "(Y) Yes\n(N) No\n(X) Cut\n(R) Retake screenshot" | rofi -dmenu -i -p "Copy screenshot ? " -l 4)
 
 if [[ "$choice" = "(Y) Yes" ]]; then
     notify-send "Screenshot copied" -r 9991 -t 5000 -i "$HOME/.local/share/icons/custom/clipboard.svg"
     cat "$filename" | xclip -selection clipboard -t image/png
+elif [[ "$choice" = "(X) Cut" ]]; then
+    notify-send "Screenshot cut" -r 9991 -t 5000 -i "$HOME/.local/share/icons/custom/clipboard.svg"
+    cat "$filename" | xclip -selection clipboard -t image/png
+    rm -rf "$filename"
 elif [[ "$choice" = "(R) Retake screenshot" ]]; then 
     notify-send "Screenshot deleted" -r 9991 -t 5000 -i "$HOME/.local/share/icons/custom/delete.svg"
     rm -rf "$filename"
