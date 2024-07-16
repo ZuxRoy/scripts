@@ -8,16 +8,18 @@ muteicon="/home/zuxroy/.local/share/icons/custom/volume-mute.svg"
 volhicon="/home/zuxroy/.local/share/icons/custom/volume-high.svg"
 vollicon="/home/zuxroy/.local/share/icons/custom/volume-low.svg"
 
-if [ $TRIGGER -eq 0 ]; then
-    if [ $VOLUME -gt 0 ]; then
-        pactl set-sink-volume @DEFAULT_SINK@ -1%
-    fi
-elif [ $TRIGGER -eq 1 ]; then
-    if [ $VOLUME -lt 100 ]; then
-        pactl set-sink-volume @DEFAULT_SINK@ +1%
-    fi
-elif [ $TRIGGER -eq 2 ]; then
+if [ $TRIGGER -eq 2 ]; then
     pactl set-sink-mute @DEFAULT_SINK@ toggle
+elif [ $STATE = "no" ]; then
+    if [ $TRIGGER -eq 0 ]; then
+        if [ $VOLUME -gt 0 ]; then
+            pactl set-sink-volume @DEFAULT_SINK@ -1%
+        fi
+    elif [ $TRIGGER -eq 1 ]; then
+        if [ $VOLUME -lt 100 ]; then
+            pactl set-sink-volume @DEFAULT_SINK@ +1%
+        fi
+    fi
 fi
 
 VOLUME=$(pactl get-sink-volume @DEFAULT_SINK@ | grep -P -o '[0-9]+(?=%)' | cut -d$'\n' -f1)
