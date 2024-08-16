@@ -69,4 +69,3 @@ else
         connect_wifi 
     fi
 fi
-
