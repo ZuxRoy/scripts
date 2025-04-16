@@ -4,7 +4,7 @@ export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
 battery=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep "percentage:" | awk '{ print $2 }' | tr -d '%')
 state=$(upower -i /org/freedesktop/UPower/devices/battery_BAT0 | grep "state:" | awk '{ print $2 }')
 lower_limit=20
-upper_limit=96
+upper_limit=97
 critical_limit=5
 
 if [ "$battery" -lt "$lower_limit" ]; then
